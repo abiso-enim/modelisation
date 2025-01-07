@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Responsable</title>
+    <link rel="stylesheet" href="styleResponsable.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Interface Responsable</h1>
+            <button class="logout">Déconnexion</button>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="ajouter">Ajouter Commande</button>
+            <button class="tab" data-tab="suivre">Suivre Commandes</button>
+            <button class="tab" data-tab="alertes">Alertes</button>
+        </nav>
+
+        <!-- Ajouter Commande -->
+        <section id="ajouter" class="tab-content active">
+            <h2>Ajouter une Commande</h2>
+            <form>
+                <div class="form-group">
+                    <label for="idClient">ID Client</label>
+                    <input type="text" id="idClient" required>
+                </div>
+                <div class="form-group">
+                    <label for="idCommande">ID Commande</label>
+                    <input type="text" id="idCommande" required>
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" required>
+                </div>
+                <div class="form-group">
+                    <label for="idConducteur">ID Conducteur</label>
+                    <input type="text" id="idConducteur" required>
+                </div>
+                <div class="form-group">
+                    <label for="temps">Temps Estimé (heures)</label>
+                    <input type="number" id="temps" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Ajouter</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Suivre Commandes -->
+        <section id="suivre" class="tab-content">
+            <h2>Suivre les Commandes</h2>
+            <div class="form-group">
+                <input type="text" id="search" placeholder="Rechercher par ID Client, Commande ou Conducteur">
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>ID Commande</th>
+                            <th>État</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-01-01</td>
+                            <td>CMD001</td>
+                            <td>En cours</td>
+                            <td><button class="details-btn">Détails</button></td>
+                        </tr>
+                        <!-- Add more rows dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Alertes -->
+        <section id="alertes" class="tab-content">
+            <h2>Alertes des Conducteurs</h2>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>ID Conducteur</th>
+                            <th>ID Commande</th>
+                            <th>Type d'Alerte</th>
+                            <th>Message</th>
+                            <th>État</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-01-07 10:30</td>
+                            <td>CDR123</td>
+                            <td>CMD001</td>
+                            <td>Retard</td>
+                            <td>Embouteillage sur l'autoroute</td>
+                            <td>Non traitée</td>
+                        </tr>
+                        <!-- Add more alerts dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal Détails -->
+    <div class="details-modal">
+        <div class="modal-content">
+            <h2>Détails de la Commande</h2>
+            <p><strong>ID:</strong> CMD001</p>
+            <p><strong>ID Conducteur:</strong> CDR123</p>
+            <p><strong>Température:</strong> 25°C</p>
+            <p><strong>Humidité:</strong> 60%</p>
+            <p><strong>Trajet:</strong> Casablanca → Rabat</p>
+            <button class="close-modal">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        // Gestion des onglets
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Affichage modal
+        document.querySelectorAll('.details-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.details-modal').style.display = 'flex';
+            });
+        });
+
+        // Fermer modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.querySelector('.details-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
