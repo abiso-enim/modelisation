@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Client Améliorée</title>
+    <link rel="stylesheet" href="styleClient.css">
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête -->
+        <header class="header">
+            <h1>Interface Client</h1>
+            <button class="logout">Déconnexion</button>
+        </header>
+
+        <!-- Informations Client -->
+        <section class="client-info">
+            <p><strong>Nom:</strong> Jean Dupont</p>
+            <p><strong>Entreprise:</strong> Tech Solutions</p>
+            <p><strong>Lieu:</strong> Paris</p>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="commandes">Commandes en cours</button>
+            <button class="tab" data-tab="reclamations">Réclamations</button>
+            <button class="tab" data-tab="historique">Historique</button>
+            <button class="tab" data-tab="notifications">Notifications</button>
+        </nav>
+
+        <!-- Contenu des onglets -->
+        <section id="commandes" class="tab-content active">
+            <h2>Commandes en cours</h2>
+            <div class="form-group">
+                <input type="text" id="search-orders" placeholder="Rechercher une commande..." />
+            </div>
+            <div class="order">
+                <p><strong>ID:</strong> CMD001</p>
+                <p>Progression: 75%</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 75%;"></div>
+                </div>
+            </div>
+            <div class="order">
+                <p><strong>ID:</strong> CMD002</p>
+                <p>Progression: 30%</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 30%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reclamations" class="tab-content">
+            <h2>Réclamations</h2>
+            <form class="reclamation-form">
+                <label for="order-id">ID Commande:</label>
+                <input type="text" id="order-id" required>
+
+                <label for="claim">Réclamation:</label>
+                <textarea id="claim" rows="4" required></textarea>
+
+                <button type="submit">Soumettre</button>
+            </form>
+        </section>
+
+        <section id="historique" class="tab-content">
+            <h2>Historique</h2>
+            <div class="form-group">
+                <button class="sort-btn" data-sort="type">Trier par Type</button>
+                <button class="sort-btn" data-sort="date">Trier par Date</button>
+                <button class="sort-btn" data-sort="status">Trier par Statut</button>
+            </div>
+            <table class="historique-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                        <th>Détails</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CMD001</td>
+                        <td>Commande</td>
+                        <td>2024-01-15</td>
+                        <td><span class="status delivered">Livré</span></td>
+                        <td>Commande standard</td>
+                    </tr>
+                    <tr>
+                        <td>REC002</td>
+                        <td>Réclamation</td>
+                        <td>2024-01-20</td>
+                        <td><span class="status processed">Traité</span></td>
+                        <td>Produit endommagé</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="notifications" class="tab-content">
+            <h2>Notifications</h2>
+            <ul>
+                <li>Nouvelle réclamation reçue : <strong>REC002</strong></li>
+                <li>Commande <strong>CMD003</strong> a été expédiée.</li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        // Script pour basculer entre les onglets
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+
+        // Rechercher dans les commandes
+        document.getElementById('search-orders').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.order').forEach(order => {
+                const text = order.textContent.toLowerCase();
+                order.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+
+        // Gestion du tri
+        document.querySelectorAll('.sort-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const sortType = button.dataset.sort;
+                const rows = Array.from(document.querySelectorAll('.historique-table tbody tr'));
+                rows.sort((a, b) => {
+                    const aText = a.querySelector(`td:nth-child(${sortType === 'type' ? 2 : sortType === 'date' ? 3 : 4})`).textContent;
+                    const bText = b.querySelector(`td:nth-child(${sortType === 'type' ? 2 : sortType === 'date' ? 3 : 4})`).textContent;
+                    return aText.localeCompare(bText);
+                });
+                rows.forEach(row => document.querySelector('.historique-table tbody').appendChild(row));
+            });
+        });
+    </script>
+</body>
+</html>
