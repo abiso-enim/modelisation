@@ -5,37 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interface Conducteur</title>
     <link rel="stylesheet" href="styleConducteur.css">
-    
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1>Interface Conducteur</h1>
+            <div class="logo">
+                <img src="LogoMilktrak.png" alt="Application Logo" class="small-logo">
+                <h1>Mon Application - Conducteur</h1>
+            </div>
             <button class="logout">Déconnexion</button>
         </header>
 
         <!-- Tabs -->
         <nav class="tabs">
-            <button class="tab active" data-tab="ajouter">Gerer les paramètres du commande actuelle</button>
+            <button class="tab active" data-tab="ajouter">Gérer les paramètres du commande actuelle</button>
             <button class="tab" data-tab="suivre">Alerts</button>
             <button class="tab" data-tab="nouvelle-alerte">Nouvelle Alerte</button>
+            <button class="tab" data-tab="notifications">Notifications</button>
         </nav>
 
-        <!-- Ajouter Commande -->
+        <!-- Section Paramètres -->
         <section id="ajouter" class="tab-content active">
-            <h2>Gerer les paramètres du commande </h2>
-            <form>
+            <h2>Gérer les paramètres du commande</h2>
+            <form class="form-group">
                 <div class="form-group">
-                    <label for="idClient">Température: 4°C</label>
-                    <input type="number" id="idClient" placeholder="Saisir la nouvelle valeur de Température" required>
+                    <label for="temperature">Température: 4°C</label>
+                    <input type="number" id="temperature" placeholder="Saisir la nouvelle valeur de Température" required>
                 </div>
                 <div class="form-group">
-                    <label for="idCommande">Humidité: 20% </label>
-                    <input type="number" id="idCommande" placeholder="Saisir la nouvelle valeur de l'Humidité" required>
+                    <label for="humidite">Humidité: 20%</label>
+                    <input type="number" id="humidite" placeholder="Saisir la nouvelle valeur de l'Humidité" required>
                 </div>
                 <div class="form-group">
-                    <label for="temps">Temps Estimé:  5 heures</label>
+                    <label for="temps">Temps Estimé: 5 heures</label>
                     <input type="number" id="temps" placeholder="Saisir le nouvelle Temps Estimé" required>
                 </div>
                 <div class="form-group">
@@ -44,9 +47,9 @@
             </form>
         </section>
 
-        <!-- Alerts -->
+        <!-- Section Alerts -->
         <section id="suivre" class="tab-content">
-            <h2>Suivre les Alerts </h2>
+            <h2>Suivre les Alerts</h2>
             <div class="form-group">
                 <input type="text" id="search" placeholder="Rechercher par ID d'Alerte">
             </div>
@@ -64,16 +67,22 @@
                         <tr>
                             <td>2025-01-01</td>
                             <td>AL-CMD001</td>
-                            <td>En cours de traitment</td>
+                            <td>En cours de traitement</td>
                             <td><button class="details-btn">Détails</button></td>
                         </tr>
-                        <!-- Add more rows dynamically -->
                     </tbody>
                 </table>
             </div>
+
+            <!-- Boîte de réponse -->
+            <div class="response-box">
+                <h3>Répondre à l'alerte</h3>
+                <textarea placeholder="Écrivez votre réponse ici..."></textarea>
+                <button type="submit">Envoyer la réponse</button>
+            </div>
         </section>
 
-        <!-- Nouvelle Alerte Section -->
+        <!-- Section Nouvelle Alerte -->
         <section id="nouvelle-alerte" class="tab-content">
             <h2>Ajouter une Nouvelle Alerte</h2>
             <form id="alerteForm">
@@ -110,6 +119,23 @@
                 </div>
             </form>
         </section>
+
+        <!-- Section Notifications -->
+        <section id="notifications" class="tab-content">
+            <h2>Box Notifications</h2>
+            <div class="notification-box">
+                <div class="notification-item alert">
+                    <h4>Alerte - Température Critique</h4>
+                    <p>La température a dépassé le seuil critique (25°C)</p>
+                    <small>Il y a 5 minutes</small>
+                </div>
+                <div class="notification-item message">
+                    <h4>Message - Mise à jour de statut</h4>
+                    <p>Votre dernière alerte a été prise en charge</p>
+                    <small>Il y a 15 minutes</small>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- Modal Détails -->
@@ -126,7 +152,7 @@
                 <div class="info-section">
                     <h3>Paramètres Techniques</h3>
                     <p><strong>Température:</strong> 25°C</p>
-                    <p><strong>Humidité:</strong> <span style="color:red;">Erreur !</span></p>
+                    <p><strong>Humidité:</strong> <span class="error-text">Erreur !</span></p>
                 </div>
 
                 <div class="info-section">
@@ -163,14 +189,13 @@
             });
         });
 
-        // Affichage modal
+        // Gestion de la modal
         document.querySelectorAll('.details-btn').forEach(button => {
             button.addEventListener('click', () => {
                 document.querySelector('.details-modal').style.display = 'flex';
             });
         });
 
-        // Fermer modal
         document.querySelector('.close-modal').addEventListener('click', () => {
             document.querySelector('.details-modal').style.display = 'none';
         });
@@ -188,14 +213,19 @@
                 id: 'AL-' + Math.random().toString(36).substr(2, 6).toUpperCase()
             };
 
-            // Ici vous pouvez ajouter le code pour envoyer les données au serveur
             console.log('Nouvelle alerte:', alerteData);
-            
-            // Réinitialiser le formulaire
-            e.target.reset();
-            
-            // Afficher un message de confirmation
+            this.reset();
             alert('Alerte créée avec succès!');
+        });
+
+        // Gestion des réponses aux alertes
+        document.querySelector('.response-box button').addEventListener('click', function() {
+            const response = document.querySelector('.response-box textarea').value;
+            if (response.trim()) {
+                console.log('Réponse envoyée:', response);
+                document.querySelector('.response-box textarea').value = '';
+                alert('Réponse envoyée avec succès!');
+            }
         });
     </script>
 </body>
